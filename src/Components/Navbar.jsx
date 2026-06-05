@@ -1,5 +1,6 @@
 import React, { useState } from "react"
 import { Menu, X } from "lucide-react"
+import { Link } from "react-router-dom"
 
 const links = {
   Home: "/",
@@ -25,18 +26,20 @@ function Navbar() {
         <ul className="hidden lg:flex items-center gap-4 text-lg">
           {Object.entries(links).map(([name, path]) => (
             <li key={path}>
-              <a href={path} className="hover:text-blue-500">
+              <Link to={path} className="hover:text-blue-500">
                 {name}
-              </a>
+              </Link>
             </li>
           ))}
         </ul>
       </nav>
 
       {/* Sign In Button */}
-      <button className="bg-black text-white px-4 py-2 rounded-md">
-        Sign In
-      </button>
+      
+        <Link to="/login" className="bg-black text-white px-4 py-2 rounded-md ">
+          Sign In
+        </Link>
+     
 
       {/* Mobile Icon */}
       <div className="lg:hidden cursor-pointer">
@@ -52,9 +55,9 @@ function Navbar() {
         <ul className="absolute top-16 left-0 w-full bg-white flex flex-col items-center gap-4 py-4 shadow-md z-50 lg:hidden">
           {Object.entries(links).map(([name, path]) => (
             <li key={path}>
-              <a href={path} onClick={() => setIsOpen(false)}>
+              <Link to={path} onClick={() => setIsOpen(false)}>
                 {name}
-              </a>
+              </Link>
             </li>
           ))}
         </ul>

@@ -1,5 +1,6 @@
 import React from "react"
-import { Share, MailOpen, Globe } from "lucide-react"
+import { Share2, MailOpen, Globe } from "lucide-react"
+import { Link } from "react-router-dom"
 
 function Footer() {
   return (
@@ -31,18 +32,26 @@ function Footer() {
         {/* Explore */}
         <div>
           <h2 className="text-lg font-semibold mb-3">Explore</h2>
-          <ul className="text-sm text-gray-300 space-y-1">
-            <li>Listing</li>
-            <li>Private Sale</li>
-            <li>Agent</li>
-            <li>Blog</li>
-          </ul>
+          <div className="text-sm text-gray-300 space-y-1 flex flex-col gap-1">
+            <Link to="/listing" className="hover:text-white">
+              Listing
+            </Link>
+            <Link to="/private-sale" className="hover:text-white">
+              Private Sale
+            </Link>
+            <Link to="/agent" className="hover:text-white">
+              Agent
+            </Link>
+            <Link to="/blog" className="hover:text-white">
+              Blog
+            </Link>
+          </div>
         </div>
 
         {/* Social + Legal */}
         <div>
           <div className="flex items-center gap-4 mb-4">
-            <Share className="w-5 h-5 cursor-pointer hover:text-blue-400" />
+            <Share2 className="w-5 h-5 cursor-pointer hover:text-blue-400" />
             <MailOpen className="w-5 h-5 cursor-pointer hover:text-blue-400" />
             <Globe className="w-5 h-5 cursor-pointer hover:text-blue-400" />
           </div>
