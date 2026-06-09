@@ -1,32 +1,40 @@
 import React, { useState } from "react";
+import { supabase } from "../supabase_client";
 import { Link } from "react-router-dom";
+
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    console.log({
-      email,
-      password,
-    });
+    const { data, error } =
+      await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
 
-    alert("Login Successful");
+    if (error) {
+      alert(error.message);
+    } else {
+      navigate("/");
+    }
   };
 
   return (
     <div className="min-h-screen bg-black flex items-center justify-center px-4">
       <div className="w-full max-w-md bg-white rounded-2xl shadow-2xl p-8">
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-black">Welcome Back</h1>
+          <h1 className="text-4xl font-bold text-black">
+            Welcome Back
+          </h1>
           <p className="text-gray-600 mt-2">
             Login to your account
           </p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-5">
-          {/* Email */}
           <div>
             <label className="block mb-2 text-black font-medium">
               Email Address
@@ -41,7 +49,6 @@ function Login() {
             />
           </div>
 
-          {/* Password */}
           <div>
             <label className="block mb-2 text-black font-medium">
               Password
@@ -56,7 +63,6 @@ function Login() {
             />
           </div>
 
-          {/* Remember Me + Forgot Password */}
           <div className="flex justify-between items-center text-sm">
             <label className="flex items-center gap-2 text-gray-700">
               <input type="checkbox" />
@@ -71,7 +77,6 @@ function Login() {
             </a>
           </div>
 
-          {/* Button */}
           <button
             type="submit"
             className="w-full bg-black text-white py-3 rounded-lg font-semibold hover:bg-gray-900 transition"
@@ -80,18 +85,16 @@ function Login() {
           </button>
         </form>
 
-        {/* Sign Up */}
         <p className="text-center text-gray-600 mt-6">
-          Don't have an account? 
-          <a
-            href="#"
+          Don't have an account?{" "}
+          <Link
+            to="/signup"
             className="text-black font-semibold hover:underline"
           >
-           < Link to="/signup">
-              Sign Up
-            </Link>
-          </a>
+            Sign Up
+          </Link>
         </p>
+        
       </div>
     </div>
   );

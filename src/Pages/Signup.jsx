@@ -1,15 +1,17 @@
 import React, { useState } from "react";
 import { supabase } from "../supabase_client";
-
+import { Link } from "react-router-dom";
 function Signup() {
   const [formData, setFormData] = useState({
-    fullname: "",
+    full_name: "",
     email: "",
     password: "",
     confirmPassword: "",
   });
 
   const [loading, setLoading] = useState(false);
+  const [signupSuccess, setSignupSuccess] = useState(false);
+  const [signupEmail, setSignupEmail] = useState("");
 
   const handleChange = (e) => {
     setFormData({
@@ -28,13 +30,15 @@ function Signup() {
 
     setLoading(true);
 
+    // Sign up user
     const { data, error } = await supabase.auth.signUp({
       email: formData.email,
       password: formData.password,
       options: {
         data: {
-          fullname: formData.fullname,
+          full_name: formData.full_name,
         },
+        emailRedirectTo: `${window.location.origin}/signup`,
       },
     });
 
@@ -45,121 +49,109 @@ function Signup() {
       return;
     }
 
-    console.log(data);
-
+    // Store email for confirmation message and reset form
+    setSignupEmail(formData.email);
     setFormData({
-      fullname: "",
+      full_name: "",
       email: "",
       password: "",
       confirmPassword: "",
     });
-
-    alert("Account created successfully! Check your email to verify your account.");
+    setSignupSuccess(true);
   };
 
   return (
     <div className="min-h-screen bg-black flex items-center justify-center px-4 py-10">
       <div className="w-full max-w-md bg-white rounded-2xl shadow-2xl p-8">
-        <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-black">Create Account</h1>
-          <p className="text-gray-600 mt-2">
-            Sign up to get started
-          </p>
-        </div>
-
-        <form onSubmit={handleSubmit} className="space-y-5">
-          {/* Full Name */}
-          <div>
-            <label className="block mb-2 font-medium text-black">
-              Full Name
-            </label>
-            <input
-              type="text"
-              name="fullname"
-              placeholder="Enter your full name"
-              value={formData.fullname}
-              onChange={handleChange}
-              required
-              className="w-full border border-gray-300 rounded-lg px-4 py-3 outline-none focus:border-black transition"
-            />
-          </div>
-
-          {/* Email */}
-          <div>
-            <label className="block mb-2 font-medium text-black">
-              Email Address
-            </label>
-            <input
-              type="email"
-              name="email"
-              placeholder="Enter your email"
-              value={formData.email}
-              onChange={handleChange}
-              required
-              className="w-full border border-gray-300 rounded-lg px-4 py-3 outline-none focus:border-black transition"
-            />
-          </div>
-
-          {/* Password */}
-          <div>
-            <label className="block mb-2 font-medium text-black">
-              Password
-            </label>
-            <input
-              type="password"
-              name="password"
-              placeholder="Create a password"
-              value={formData.password}
-              onChange={handleChange}
-              required
-              minLength={6}
-              className="w-full border border-gray-300 rounded-lg px-4 py-3 outline-none focus:border-black transition"
-            />
-          </div>
-
-          {/* Confirm Password */}
-          <div>
-            <label className="block mb-2 font-medium text-black">
-              Confirm Password
-            </label>
-            <input
-              type="password"
-              name="confirmPassword"
-              placeholder="Confirm your password"
-              value={formData.confirmPassword}
-              onChange={handleChange}
-              required
-              className="w-full border border-gray-300 rounded-lg px-4 py-3 outline-none focus:border-black transition"
-            />
-          </div>
-
-          {/* Terms */}
-          <div className="flex items-start gap-2 text-sm">
-            <input type="checkbox" required className="mt-1" />
-            <p className="text-gray-700">
-              I agree to the Terms and Conditions and Privacy Policy.
+        {signupSuccess ? (
+          <div className="text-center">
+            <h1 className="text-4xl font-bold text-black mb-4">
+              Check Your Email
+            </h1>
+            <p className="text-gray-600 mb-4">
+              We've sent a confirmation link to <strong>{signupEmail}</strong>
             </p>
+            <p className="text-gray-600 mb-6">
+              Click the link to confirm your email. Your profile will be created
+              automatically, and you'll be logged in!
+            </p>
+            <button
+              onClick={() => {
+                setSignupSuccess(false);
+                setSignupEmail("");
+              }}
+              className="w-full bg-black text-white py-3 rounded-lg"
+            >
+              Back to Sign Up
+            </button>
           </div>
+        ) : (
+          <>
+            <div className="text-center mb-8">
+              <h1 className="text-4xl font-bold text-black">Create Account</h1>
+              <p className="text-gray-600 mt-2">Sign up to get started</p>
+            </div>
 
-          {/* Submit Button */}
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full bg-black text-white py-3 rounded-lg font-semibold hover:bg-gray-900 transition disabled:opacity-50"
-          >
-            {loading ? "Creating Account..." : "Create Account"}
-          </button>
-        </form>
+            <form onSubmit={handleSubmit} className="space-y-5">
+              <input
+                type="text"
+                name="full_name"
+                placeholder="Full Name"
+                value={formData.full_name}
+                onChange={handleChange}
+                className="w-full border px-4 py-3 rounded-lg"
+                required
+              />
 
-        <p className="text-center text-gray-600 mt-6">
-          Already have an account?{" "}
-          <a
-            href="/login"
-            className="text-black font-semibold hover:underline"
-          >
-            Login
-          </a>
-        </p>
+              <input
+                type="email"
+                name="email"
+                placeholder="Email"
+                value={formData.email}
+                onChange={handleChange}
+                className="w-full border px-4 py-3 rounded-lg"
+                required
+              />
+
+              <input
+                type="password"
+                name="password"
+                placeholder="Password"
+                value={formData.password}
+                onChange={handleChange}
+                className="w-full border px-4 py-3 rounded-lg"
+                required
+              />
+
+              <input
+                type="password"
+                name="confirmPassword"
+                placeholder="Confirm Password"
+                value={formData.confirmPassword}
+                onChange={handleChange}
+                className="w-full border px-4 py-3 rounded-lg"
+                required
+              />
+
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full bg-black text-white py-3 rounded-lg"
+              >
+                {loading ? "Creating..." : "Create Account"}
+              </button>
+            </form>
+            <p>
+              Have an account?{" "}
+              <Link
+                to="/login"
+                className="text-black font-semibold hover:underline text-center"
+              >
+                Login
+              </Link>
+            </p>
+          </>
+        )}
       </div>
     </div>
   );
