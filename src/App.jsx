@@ -24,6 +24,7 @@ import BrowseProperties from "./Components/Browse_properties";
 import Savedlistings from "./Components/Saved_listings";
 import Profile from "./Components/Profile";
 import PropertyCard from "./Components/PropertyCard";
+import My_properties from "./Components/My_properties";
 function App() {
   useEffect(() => {
     // Global auth listener to create profile after email confirmation
@@ -102,8 +103,10 @@ function App() {
         }
         {<Route path="/saved" element={<Savedlistings />} />}
         {<Route path="/profile" element={<Profile />} />}
+        {<Route path="/my-properties" element={<my_properties />} />}
+        
       </Routes>
-      
+    
       <Footer />
     </BrowserRouter>
   );
