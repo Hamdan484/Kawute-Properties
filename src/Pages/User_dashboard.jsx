@@ -32,7 +32,7 @@ function UserDashboard() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
 
           <Link
-            to="/browse"
+            to="/properties"
             className="border border-white/20 rounded-xl p-6 bg-black/40 hover:bg-white hover:text-black transition"
           >
             <h3 className="text-lg font-semibold">Browse Properties</h3>

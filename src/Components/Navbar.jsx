@@ -36,7 +36,7 @@ function Navbar() {
 
       {/* Sign In Button */}
       
-        <Link to="/signup-options" className="bg-black text-white px-4 py-2 rounded-md ">
+        <Link to="/login" className="bg-black text-white px-4 py-2 rounded-md ">
           Sign In
         </Link>
      

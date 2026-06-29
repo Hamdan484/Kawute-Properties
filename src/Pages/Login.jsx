@@ -1,10 +1,13 @@
 import React, { useState } from "react";
 import { supabase } from "../supabase_client";
-import { Link } from "react-router-dom";
+import { Link,useNavigate } from "react-router-dom";
+
 
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
+  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -18,7 +21,7 @@ function Login() {
     if (error) {
       alert(error.message);
     } else {
-      navigate("/");
+      navigate("/agent-dashboard");
     }
   };
 
@@ -88,7 +91,7 @@ function Login() {
         <p className="text-center text-gray-600 mt-6">
           Don't have an account?{" "}
           <Link
-            to="/signup"
+            to="/signup-options"
             className="text-black font-semibold hover:underline"
           >
             Sign Up

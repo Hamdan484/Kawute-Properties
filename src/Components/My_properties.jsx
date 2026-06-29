@@ -17,7 +17,7 @@ function MyProperties() {
       {
         id: 2,
         title: "Luxury Villa",
-        price: 5000,
+        price: 5009,
         city: "Accra",
         status: "Pending",
         image:"https://tse2.mm.bing.net/th/id/OIP.ivqYtXZ8oFjIKc_fbkoVhgHaEN?rs=1&pid=ImgDetMain&o=7&rm=3"

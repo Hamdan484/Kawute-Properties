@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { motion } from "motion/react";
 import { supabase } from "./supabase_client";
 import Navbar from "../src/Components/Navbar";
@@ -18,11 +18,12 @@ import AgentDashboard from "./Pages/Agent_dashboard";
 import AdminDashboard from "./Pages/Admin_dashboard";
 import UserDashboard from "./Pages/user_dashboard";
 import AddProperty from "./Components/Add_properties";
-import Myproperties from "./Components/My_properties"
+import Myproperties from "./Components/My_properties";
 import ClientMessages from "./Components/Client_messages";
 import BrowseProperties from "./Components/Browse_properties";
-import Savedlistings from "./Components/Saved_listings"
-import Profile from "./Components/Profile"
+import Savedlistings from "./Components/Saved_listings";
+import Profile from "./Components/Profile";
+import PropertyCard from "./Components/PropertyCard";
 function App() {
   useEffect(() => {
     // Global auth listener to create profile after email confirmation
@@ -38,10 +39,15 @@ function App() {
             .from("profiles")
             .select("user_id")
             .eq("user_id", userId)
-            .single();
+            .maybeSingle();
+
+          if (fetchError && !fetchError?.details?.includes("No rows")) {
+            console.error("Failed to fetch profile:", fetchError);
+            return;
+          }
 
           // If profile doesn't exist, create it
-          if (!existingProfile && !fetchError?.details?.includes("No rows")) {
+          if (!existingProfile) {
             const { error: insertError } = await supabase
               .from("profiles")
               .insert([
@@ -88,10 +94,16 @@ function App() {
         {<Route path="/my-properties" element={<Myproperties />} />}
         {<Route path="/inquiries" element={<ClientMessages />} />}
         {<Route path="/properties" element={<BrowseProperties />} />}
+        {
+          <Route
+            path="/browse"
+            element={<Navigate to="/properties" replace />}
+          />
+        }
         {<Route path="/saved" element={<Savedlistings />} />}
         {<Route path="/profile" element={<Profile />} />}
-
       </Routes>
+      
       <Footer />
     </BrowserRouter>
   );
