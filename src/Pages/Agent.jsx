@@ -1,12 +1,11 @@
 import React, { useState } from "react";
 import Agent1 from "../assets/AgentImages/Agent1.png";
-  import Agent2 from "../assets/AgentImages/Agent2.png";
-  import Agent3 from "../assets/AgentImages/Agent3.png";
-  import Agent4 from "../assets/AgentImages/Agent4.png";
+import Agent2 from "../assets/AgentImages/Agent2.png";
+import Agent3 from "../assets/AgentImages/Agent3.png";
+import Agent4 from "../assets/AgentImages/Agent4.png";
 
 function Agents() {
   const [hoveredId, setHoveredId] = useState(null);
-  
 
   const agents = [
     {
@@ -24,7 +23,7 @@ function Agents() {
       role: "Senior Property Consultant",
       phone: "+233 20 123 4567",
       email: "george@kawuteproperties.com",
-      image: Agent2 ,
+      image: Agent2,
       bio: "Expert in residential properties",
     },
     {
@@ -50,16 +49,20 @@ function Agents() {
   return (
     <div className="min-h-screen bg-white">
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-black via-black to-gray-900 py-32 px-6 overflow-hidden">
+      <section className="relative bg-cover bg-center bg-no-repeat py-32 px-6 overflow-hidden pt-20" style={{backgroundImage: "url('https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=1500&q=80')"}}>
+        {/* Dark overlay for better text readability */}
+        <div className="absolute inset-0 bg-black/60"></div>
+        
         {/* Decorative circles */}
         <div className="absolute top-0 right-0 w-96 h-96 bg-white opacity-5 rounded-full blur-3xl -mr-48 -mt-48"></div>
-        
+
         <div className="max-w-6xl mx-auto text-center relative z-10">
           <h1 className="text-6xl md:text-7xl font-bold text-white mb-6 tracking-tight">
             Meet Our Agents
           </h1>
           <p className="text-xl text-gray-300 max-w-2xl mx-auto leading-relaxed">
-            Experienced professionals dedicated to finding you the perfect property.
+            Experienced professionals dedicated to finding you the perfect
+            property.
             <br />
             Trust, expertise, and results.
           </p>
@@ -126,9 +129,11 @@ function Agents() {
                   </div>
 
                   {/* Button */}
-                  <button className="w-full bg-black text-white py-3 rounded-lg font-semibold text-sm tracking-wide transition-all duration-300 hover:bg-white hover:text-black border-2 border-black">
-                    Contact Agent
-                  </button>
+                  <a href={`mailto:${agent.email}`}>
+                    <button className="w-full bg-black text-white py-3 rounded-lg font-semibold text-sm tracking-wide transition-all duration-300 hover:bg-white hover:text-black border-2 border-black">
+                      Contact Agent
+                    </button>
+                  </a>
                 </div>
               </div>
             ))}

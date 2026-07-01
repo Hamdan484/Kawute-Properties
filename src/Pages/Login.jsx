@@ -1,22 +1,19 @@
 import React, { useState } from "react";
 import { supabase } from "../supabase_client";
-import { Link,useNavigate } from "react-router-dom";
-
+import { Link, useNavigate } from "react-router-dom";
 
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
-  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const { data, error } =
-      await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
 
     if (error) {
       alert(error.message);
@@ -26,15 +23,11 @@ function Login() {
   };
 
   return (
-    <div className="min-h-screen bg-black flex items-center justify-center px-4">
+    <div className="min-h-screen bg-black flex items-center justify-center px-4 pt-20">
       <div className="w-full max-w-md bg-white rounded-2xl shadow-2xl p-8">
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-black">
-            Welcome Back
-          </h1>
-          <p className="text-gray-600 mt-2">
-            Login to your account
-          </p>
+          <h1 className="text-4xl font-bold text-black">Welcome Back</h1>
+          <p className="text-gray-600 mt-2">Login to your account</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-5">
@@ -72,10 +65,7 @@ function Login() {
               Remember Me
             </label>
 
-            <a
-              href="#"
-              className="text-black font-medium hover:underline"
-            >
+            <a href="#" className="text-black font-medium hover:underline">
               Forgot Password?
             </a>
           </div>
@@ -97,7 +87,6 @@ function Login() {
             Sign Up
           </Link>
         </p>
-        
       </div>
     </div>
   );

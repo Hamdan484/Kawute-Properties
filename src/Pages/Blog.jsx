@@ -7,7 +7,6 @@ function Blog() {
   const navigate = useNavigate();
 
   const posts = [
-    
     {
       id: 1,
       title: "How to Buy Your First Home in Ghana",
@@ -54,7 +53,16 @@ function Blog() {
   return (
     <div className="min-h-screen bg-white">
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-black via-black to-gray-900 py-32 px-6 overflow-hidden">
+      <section
+        className="relative bg-cover bg-center bg-no-repeat py-32 px-6 overflow-hidden pt-20"
+        style={{
+          backgroundImage:
+            "url('https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=1500&q=80')",
+        }}
+      >
+        {/* Dark overlay for better text readability */}
+        <div className="absolute inset-0 bg-black/60"></div>
+
         {/* Decorative elements */}
         <div className="absolute bottom-0 left-0 w-96 h-96 bg-white opacity-5 rounded-full blur-3xl -ml-48 -mb-48"></div>
 
@@ -112,14 +120,14 @@ function Blog() {
 
                   {/* Read more button */}
                   <button
-  onClick={() => navigate(`/blog/${post.id}`)}
-  className="text-black font-semibold text-sm hover:gap-3 flex items-center gap-1 transition-all duration-300 group/btn"
->
-  Read More
-  <span className="transition-transform duration-300 group-hover/btn:translate-x-1">
-    →
-  </span>
-</button>
+                    onClick={() => navigate(`/blog/${post.id}`)}
+                    className="text-black font-semibold text-sm hover:gap-3 flex items-center gap-1 transition-all duration-300 group/btn"
+                  >
+                    Read More
+                    <span className="transition-transform duration-300 group-hover/btn:translate-x-1">
+                      →
+                    </span>
+                  </button>
                 </div>
               </div>
             ))}
@@ -136,7 +144,8 @@ function Blog() {
           <h2 className="text-5xl font-bold text-black mb-4">Stay Updated</h2>
 
           <p className="text-lg text-gray-600 mb-8">
-            Get the latest real estate insights delivered to your inbox every week.
+            Get the latest real estate insights delivered to your inbox every
+            week.
           </p>
 
           <form onSubmit={handleSubscribe} className="space-y-3">

@@ -34,8 +34,8 @@ function BrowseProperties() {
     if (search) {
       result = result.filter(
         (item) =>
-          item.title?.toLowerCase().includes(search.toLowerCase()) ||
-          item.location?.toLowerCase().includes(search.toLowerCase()),
+          item.title?.trim().toLowerCase().includes(search.toLowerCase()) ||
+          item.city?.trim().toLowerCase().includes(search.toLowerCase()),
       );
     }
 
@@ -48,18 +48,20 @@ function BrowseProperties() {
     }
 
     if (beds) {
-      result = result.filter((item) => item.beds === Number(beds));
+      result = result.filter((item) => item.bed_rooms === Number(beds));
     }
 
     if (type) {
-      result = result.filter((item) => item.type === type);
+      result = result.filter(
+        (item) => item.appartment_type.toLowerCase() === type.toLowerCase(),
+      );
     }
 
     setFiltered(result);
   }, [search, minPrice, maxPrice, beds, type, properties]);
 
   return (
-    <div className="bg-black min-h-screen text-white px-6 py-10">
+    <div className="bg-black min-h-screen text-white px-6 py-10 pt-20">
       {/* TITLE */}
       <h2 className="text-3xl font-bold mb-6">Browse Properties</h2>
 
@@ -68,7 +70,7 @@ function BrowseProperties() {
         <input
           className="p-3 rounded bg-white/10 border border-white/20 outline-none"
           type="text"
-          placeholder="Search location or title..."
+          placeholder="Search city or title..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
@@ -98,7 +100,7 @@ function BrowseProperties() {
         />
 
         <select
-          className="p-3 rounded bg-white/10 border border-white/20 outline-none"
+          className="p-3 rounded bg-black border border-white/20 outline-none "
           value={type}
           onChange={(e) => setType(e.target.value)}
         >

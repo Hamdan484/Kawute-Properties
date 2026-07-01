@@ -104,9 +104,8 @@ function App() {
         {<Route path="/saved" element={<Savedlistings />} />}
         {<Route path="/profile" element={<Profile />} />}
         {<Route path="/my-properties" element={<my_properties />} />}
-        
       </Routes>
-    
+
       <Footer />
     </BrowserRouter>
   );

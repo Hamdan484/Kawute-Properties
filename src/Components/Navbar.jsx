@@ -1,21 +1,21 @@
-import React, { useState } from "react"
-import { Menu, X } from "lucide-react"
-import { Link } from "react-router-dom"
+import React, { useState } from "react";
+import { Menu, X } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const links = {
   Home: "/",
   About: "/about",
   Contact: "/contact",
+  Listings: "/properties",
   Agent: "/agent",
-  Blog: "/blog"
-}
+  Blog: "/blog",
+};
 
 function Navbar() {
-  const [isOpen, setIsOpen] = useState(false)
+  const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div className="flex items-center justify-between p-4 shadow-md px-8 py-4 bg-zinc-100 relative">
-
+    <div className="flex items-center justify-between px-8 py-4 shadow-md bg-zinc-100 fixed top-0 left-0 right-0 z-50 border-b border-gray-300">
       {/* Logo */}
       <h1 className="text-lg md:text-xl lg:text-2xl font-semibold">
         KAWUTE PROPERTIES
@@ -35,11 +35,10 @@ function Navbar() {
       </nav>
 
       {/* Sign In Button */}
-      
-        <Link to="/login" className="bg-black text-white px-4 py-2 rounded-md ">
-          Sign In
-        </Link>
-     
+
+      <Link to="/login" className="bg-black text-white px-4 py-2 rounded-md ">
+        Sign In
+      </Link>
 
       {/* Mobile Icon */}
       <div className="lg:hidden cursor-pointer">
@@ -63,7 +62,7 @@ function Navbar() {
         </ul>
       )}
     </div>
-  )
+  );
 }
 
-export default Navbar
+export default Navbar;

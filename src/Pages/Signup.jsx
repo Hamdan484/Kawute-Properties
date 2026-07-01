@@ -61,7 +61,7 @@ function Signup() {
   };
 
   return (
-    <div className="min-h-screen bg-black flex items-center justify-center px-4 py-10">
+    <div className="min-h-screen bg-black flex items-center justify-center px-4 py-10 pt-20">
       <div className="w-full max-w-md bg-white rounded-2xl shadow-2xl p-8">
         {signupSuccess ? (
           <div className="text-center">

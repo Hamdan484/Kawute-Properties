@@ -7,6 +7,34 @@ import { supabase } from "../supabase_client";
 function Home() {
   const [properties, setProperties] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [search, setSearch] = useState("");
+  const [filtered, setFiltered] = useState([]);
+  const [type, setType] = useState("");
+  const [budget, setBudget] = useState("");
+  const [priceRange, setPriceRange] = useState({ min: 0, max: 10000000 });
+
+  useEffect(() => {
+    let result = properties;
+    if (search) {
+      result = result.filter(
+        (item) =>
+          item.title?.trim().toLowerCase().includes(search.toLowerCase()) ||
+          item.city?.trim().toLowerCase().includes(search.toLowerCase()),
+      );
+    }
+    if (type) {
+      result = result.filter(
+        (item) => item.appartment_type.toLowerCase() === type.toLowerCase(),
+      );
+    }
+    if (priceRange.min || priceRange.max) {
+      result = result.filter(
+        (item) => item.price >= priceRange.min && item.price <= priceRange.max,
+      );
+    }
+
+    setFiltered(result);
+  }, [search, type, priceRange, properties]);
 
   useEffect(() => {
     const fetchProperties = async () => {
@@ -28,7 +56,7 @@ function Home() {
   return (
     <div>
       {/* Background image */}
-      <div className="relative w-full h-[80vh]">
+      <div className="relative w-full h-[80vh] pt-20">
         <img
           src={HomeImage}
           alt="Home"
@@ -51,28 +79,41 @@ function Home() {
               type="text"
               placeholder="Search location..."
               className="flex-1 px-3 py-2 border rounded-md outline-none"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
             />
 
             {/* Property Type */}
-            <select className="px-3 py-2 border rounded-md">
-              <option>Property Type</option>
-              <option>Apartment</option>
-              <option>House</option>
-              <option>Villa</option>
+            <select
+              className="px-3 py-2 border rounded-md"
+              value={type}
+              onChange={(e) => setType(e.target.value)}
+            >
+              <option value="">Property Type</option>
+              <option value="Apartment">Apartment</option>
+              <option value="House">House</option>
+              <option value="Villa">Villa</option>
             </select>
 
             {/* Budget */}
-            <select className="px-3 py-2 border rounded-md">
-              <option>Budget</option>
-              <option>$0 - $500</option>
-              <option>$500 - $1000</option>
-              <option>$1000+</option>
+            <select
+              className="px-3 py-2 border rounded-md"
+              value={budget}
+              onChange={(e) => {
+                setBudget(e.target.value);
+                if (e.target.value) {
+                  const [min, max] = e.target.value
+                    .split("-")
+                    .map((val) => Number(val.replace(/,/g, "")));
+                  setPriceRange({ min, max: max || 10000000 });
+                }
+              }}
+            >
+              <option value="">Budget</option>
+              <option value="100000-200000">$100,000 - $200,000</option>
+              <option value="201000-300000">$201,000 - $300,000</option>
+              <option value="301000-10000000">$301,000+</option>
             </select>
-
-            {/* Search Button */}
-            <button className="bg-black text-white px-5 py-2 rounded-md hover:bg-blue-700">
-              Search
-            </button>
           </div>
         </div>
       </div>
@@ -89,8 +130,8 @@ function Home() {
           <p className="text-center">Loading properties...</p>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
-            {properties.map((property) => (
-              <PropertyCard key={property.id} property={property} />
+            {filtered.map((property, index) => (
+              <PropertyCard property={property} key={property.id || index} />
             ))}
           </div>
         )}

@@ -2,11 +2,13 @@ import React from "react";
 import aboutImage from "/aboutImage.png";
 function About() {
   return (
-    <div className="min-h-screen bg-white text-black">
+    <div className="min-h-screen bg-white text-black pt-20">
       {/* Hero Section */}
       <section className="bg-black text-white py-10 md:py-20 px-6">
         <div className="max-w-6xl mx-auto text-center">
-          <h1 className="text-2xl md:text-5xl font-bold mb-4">About Kawute Properties</h1>
+          <h1 className="text-2xl md:text-5xl font-bold mb-4">
+            About Kawute Properties
+          </h1>
           <p className="text-lg text-gray-300 max-w-2xl mx-auto">
             Helping individuals and families find the perfect property with
             trust, transparency, and professionalism.
@@ -86,8 +88,6 @@ function About() {
           </div>
         </div>
       </section>
-
-      
 
       {/* CTA */}
       <section className="py-20 px-6 text-center">

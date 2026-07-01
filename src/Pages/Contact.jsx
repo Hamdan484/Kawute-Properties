@@ -5,24 +5,24 @@ function Contact() {
     name: "",
     email: "",
     subject: "",
-    message: ""
+    message: "",
   });
-  const handleChange =(e)=>{
+  const handleChange = (e) => {
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
-    })
-  }
+      [e.target.name]: e.target.value,
+    });
+  };
 
-  const handleSubmit =(e)=>{
+  const handleSubmit = (e) => {
     e.preventDefault();
 
     console.log(formData);
     alert("Message Sent Successfully!");
-  }
+  };
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white pt-20">
       {/* Hero Section */}
       <section className="bg-black text-white py-20 px-6">
         <div className="max-w-6xl mx-auto text-center">
@@ -37,59 +37,41 @@ function Contact() {
       {/* Contact Content */}
       <section className="py-20 px-6">
         <div className="max-w-6xl mx-auto grid lg:grid-cols-2 gap-12">
-
           {/* Contact Information */}
           <div>
-            <h2 className="text-3xl font-bold mb-8">
-              Get In Touch
-            </h2>
+            <h2 className="text-3xl font-bold mb-8">Get In Touch</h2>
 
             <div className="space-y-6">
               <div>
                 <h3 className="font-semibold text-xl mb-2">Address</h3>
-                <p className="text-gray-600">
-                  Kumasi, Ashanti Region, Ghana
-                </p>
+                <p className="text-gray-600">Kumasi, Ashanti Region, Ghana</p>
               </div>
 
               <div>
                 <h3 className="font-semibold text-xl mb-2">Phone</h3>
-                <p className="text-gray-600">
-                  +233 59 778 8861
-                </p>
+                <p className="text-gray-600">+233 59 778 8861</p>
               </div>
 
               <div>
                 <h3 className="font-semibold text-xl mb-2">Email</h3>
-                <p className="text-gray-600">
-                  info@KawuteProperties.com
-                </p>
+                <p className="text-gray-600">info@KawuteProperties.com</p>
               </div>
 
               <div>
-                <h3 className="font-semibold text-xl mb-2">
-                  Working Hours
-                </h3>
+                <h3 className="font-semibold text-xl mb-2">Working Hours</h3>
                 <p className="text-gray-600">
                   Monday - Friday: 8:00 AM - 6:00 PM
                 </p>
-                <p className="text-gray-600">
-                  Saturday: 9:00 AM - 3:00 PM
-                </p>
+                <p className="text-gray-600">Saturday: 9:00 AM - 3:00 PM</p>
               </div>
             </div>
           </div>
 
           {/* Contact Form */}
           <div className="bg-gray-100 p-8 rounded-2xl shadow-md">
-            <h2 className="text-3xl font-bold mb-6">
-              Send a Message
-            </h2>
+            <h2 className="text-3xl font-bold mb-6">Send a Message</h2>
 
-            <form
-              onSubmit={handleSubmit}
-              className="space-y-5"
-            >
+            <form onSubmit={handleSubmit} className="space-y-5">
               <input
                 type="text"
                 name="name"
@@ -138,7 +120,6 @@ function Contact() {
               </button>
             </form>
           </div>
-
         </div>
       </section>
 
@@ -146,7 +127,11 @@ function Contact() {
       <section className="px-6 pb-20">
         <div className="max-w-6xl mx-auto">
           <div className="bg-gray-200 rounded-2xl h-80 flex ">
-            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3970.844444444444!2d-0.5666666666666667!3d5.555555555555555!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMzDVMzIwLjEwNjYyNzQgNTAuMjYwMzUyNzQgLTAgQnVpbGQgQ29tcGFueSwgQ29tcGFueSBEZXBhcnRtZW50LCBLYXdpdGUgUHJvcGVydGllcywgS29uZ29sYSwgR2hhbmE!" frameBorder="0" className="w-full h-full"></iframe>
+            <iframe
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3970.844444444444!2d-0.5666666666666667!3d5.555555555555555!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMzDVMzIwLjEwNjYyNzQgNTAuMjYwMzUyNzQgLTAgQnVpbGQgQ29tcGFueSwgQ29tcGFueSBEZXBhcnRtZW50LCBLYXdpdGUgUHJvcGVydGllcywgS29uZ29sYSwgR2hhbmE!"
+              frameBorder="0"
+              className="w-full h-full"
+            ></iframe>
           </div>
         </div>
       </section>
