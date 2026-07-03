@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Menu, X } from "lucide-react";
+import { Menu, X, Heart } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const links = {
@@ -35,10 +35,22 @@ function Navbar() {
       </nav>
 
       {/* Sign In Button */}
-
-      <Link to="/login" className="bg-black text-white px-4 py-2 rounded-md ">
-        Sign In
-      </Link>
+      <div className="flex items-center gap-4">
+        <Link
+          to="/liked"
+          className="hidden md:flex items-center gap-2 text-black hover:text-red-500 transition font-semibold"
+          title="View liked properties"
+        >
+          <Heart size={20} />
+          <span className="text-sm">Liked</span>
+        </Link>
+        <Link
+          to="/login"
+          className="bg-black text-white px-4 py-2 rounded-md hover:bg-gray-800 transition"
+        >
+          Sign In
+        </Link>
+      </div>
 
       {/* Mobile Icon */}
       <div className="lg:hidden cursor-pointer">
@@ -59,6 +71,16 @@ function Navbar() {
               </Link>
             </li>
           ))}
+          <li>
+            <Link
+              to="/liked"
+              onClick={() => setIsOpen(false)}
+              className="flex items-center gap-2 text-black hover:text-red-500 transition font-semibold"
+            >
+              <Heart size={20} />
+              <span>Liked Properties</span>
+            </Link>
+          </li>
         </ul>
       )}
     </div>

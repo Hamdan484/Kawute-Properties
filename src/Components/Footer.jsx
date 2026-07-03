@@ -32,9 +32,10 @@ function Footer() {
             <Link to="/properties" className="hover:text-white">
               Listings
             </Link>
-            <Link to="/private-sale" className="hover:text-white">
-              Private Sale
+            <Link to="/liked" className="hover:text-white">
+              Liked Properties
             </Link>
+            
             <Link to="/agent" className="hover:text-white">
               Agent
             </Link>
@@ -47,9 +48,13 @@ function Footer() {
         {/* Social + Legal */}
         <div>
           <div className="flex items-center gap-4 mb-4">
-            <Share2 className="w-5 h-5 cursor-pointer hover:text-blue-400" />
-            <MailOpen className="w-5 h-5 cursor-pointer hover:text-blue-400" />
-            <Globe className="w-5 h-5 cursor-pointer hover:text-blue-400" />
+            
+            <Link to="mailto:info@kawuteproperties.com">
+              <MailOpen className="w-5 h-5 cursor-pointer hover:text-blue-400" />
+            </Link>
+            <Link to="https://www.kawuteproperties.com" target="_blank" rel="noopener noreferrer">
+              <Globe className="w-5 h-5 cursor-pointer hover:text-blue-400" />
+            </Link>
           </div>
 
           <p className="text-xs text-gray-400 mb-2">

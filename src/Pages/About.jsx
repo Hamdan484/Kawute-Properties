@@ -1,15 +1,29 @@
 import React from "react";
 import aboutImage from "/aboutImage.png";
+import { Link } from "react-router-dom";
 function About() {
   return (
     <div className="min-h-screen bg-white text-black pt-20">
       {/* Hero Section */}
-      <section className="bg-black text-white py-10 md:py-20 px-6">
-        <div className="max-w-6xl mx-auto text-center">
-          <h1 className="text-2xl md:text-5xl font-bold mb-4">
+      <section
+        className="relative bg-cover bg-center py-40 px-6 overflow-hidden min-h-[450px] w-full"
+        style={{
+          backgroundImage:
+            "url('https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8ZW58MHx8fHx8fA%3D%3D&auto=format&fit=crop&w=2072&q=80')",
+          backgroundAttachment: "fixed",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+        }}
+      >
+        {/* Dark overlay */}
+        <div className="absolute inset-0 bg-black/60"></div>
+
+        <div className="max-w-6xl mx-auto text-center relative z-10">
+          <h1 className="text-5xl md:text-6xl font-bold text-white mb-4 tracking-tight">
             About Kawute Properties
           </h1>
-          <p className="text-lg text-gray-300 max-w-2xl mx-auto">
+          <p className="text-xl text-gray-200 max-w-2xl mx-auto">
             Helping individuals and families find the perfect property with
             trust, transparency, and professionalism.
           </p>
@@ -67,22 +81,22 @@ function About() {
       {/* Statistics */}
       <section className="py-20 px-6">
         <div className="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-          <div>
+          <div className="bg-gray-200 p-6 rounded-xl shadow-lg">
             <h2 className="text-4xl font-bold">500+</h2>
             <p className="text-gray-600">Properties Listed</p>
           </div>
 
-          <div>
+          <div className="bg-gray-200 p-6 rounded-xl shadow-lg">
             <h2 className="text-4xl font-bold">300+</h2>
             <p className="text-gray-600">Happy Clients</p>
           </div>
 
-          <div>
+          <div className="bg-gray-200 p-6 rounded-xl shadow-lg">
             <h2 className="text-4xl font-bold">10+</h2>
             <p className="text-gray-600">Cities Covered</p>
           </div>
 
-          <div>
+          <div className="bg-gray-200 p-6 rounded-xl shadow-lg">
             <h2 className="text-4xl font-bold">5+</h2>
             <p className="text-gray-600">Years Experience</p>
           </div>
@@ -100,7 +114,9 @@ function About() {
         </p>
 
         <button className="bg-black text-white px-8 py-3 rounded-lg hover:bg-gray-800 transition">
+          <Link to="/properties"> 
           Explore Properties
+          </Link>
         </button>
       </section>
     </div>

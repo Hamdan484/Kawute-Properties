@@ -1,6 +1,57 @@
 import { BedDouble, Bath, MapPin, Heart, ArrowRight } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
 
-const PropertyCard = ({ property }) => {
+const PropertyCard = ({ property, onLikeChange, hideHeart = false }) => {
+  const navigate = useNavigate();
+  const [isLiked, setIsLiked] = useState(false);
+
+  useEffect(() => {
+    // Check if property is liked on mount
+    const likedIds = JSON.parse(
+      localStorage.getItem("likedProperties") || "[]",
+    );
+    setIsLiked(likedIds.includes(property.property_id));
+  }, [property.property_id]);
+  const handleLike = (e) => {
+    e.stopPropagation();
+    const likedIds = JSON.parse(
+      localStorage.getItem("likedProperties") || "[]",
+    );
+
+    let newLikedState = false;
+
+    if (isLiked) {
+      // Remove from liked
+      const updatedIds = likedIds.filter((id) => id !== property.property_id);
+      localStorage.setItem("likedProperties", JSON.stringify(updatedIds));
+      newLikedState = false;
+      console.log("Property unliked:", property.property_id);
+    } else {
+      // Add to liked
+      if (!likedIds.includes(property.property_id)) {
+        likedIds.push(property.property_id);
+        localStorage.setItem("likedProperties", JSON.stringify(likedIds));
+        console.log("Property liked:", property.property_id);
+        console.log("Updated likedIds:", likedIds);
+      }
+      newLikedState = true;
+    }
+
+    setIsLiked(newLikedState);
+
+    // Dispatch custom event to notify other components
+    window.dispatchEvent(
+      new CustomEvent("likesUpdated", {
+        detail: { propertyId: property.property_id, isLiked: newLikedState },
+      }),
+    );
+
+    // Notify parent component if callback provided
+    if (onLikeChange) {
+      onLikeChange(property.id, newLikedState);
+    }
+  };
   const {
     title,
     price,
@@ -34,9 +85,17 @@ const PropertyCard = ({ property }) => {
           {appartment_type || "Property"}
         </span>
 
-        <button className="absolute right-4 top-4 rounded-full bg-black p-2 shadow-lg transition hover:bg-white hover:text-black">
-          <Heart size={18} />
-        </button>
+        {!hideHeart && (
+          <button
+            onClick={handleLike}
+            className="absolute right-4 top-4 rounded-full bg-black p-2 shadow-lg transition hover:bg-white hover:text-black"
+          >
+            <Heart
+              size={18}
+              className={isLiked ? "fill-red-500 text-red-500" : "text-white"}
+            />
+          </button>
+        )}
       </div>
 
       {/* Content */}
@@ -83,7 +142,10 @@ const PropertyCard = ({ property }) => {
         </div>
 
         {/* Button */}
-        <button className="flex w-full items-center justify-center gap-2 rounded-xl bg-black px-5 py-3 font-semibold text-white transition hover:bg-gray-800">
+        <button
+          onClick={() => navigate(`/property/${property.id}`)}
+          className="flex w-full items-center justify-center gap-2 rounded-xl bg-black px-5 py-3 font-semibold text-white transition hover:bg-gray-800"
+        >
           View Details
           <ArrowRight size={18} />
         </button>

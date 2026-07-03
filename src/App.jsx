@@ -11,6 +11,8 @@ import Signup from "./Pages/Signup";
 import Conntact from "./Pages/Contact";
 import Blog from "./Pages/Blog";
 import Agent from "./Pages/Agent";
+import PropertyDetails from "./Pages/PropertyDetails";
+import LikedProperties from "./Pages/LikedProperties";
 import BlogComponent from "./Components/BlogComponent";
 import AgentSignup from "./Pages/SignUp_Agent";
 import SignUpCard from "./Pages/Sign_up_card";
@@ -85,6 +87,7 @@ function App() {
         {<Route path="/contact" element={<Conntact />} />}
         {<Route path="/blog" element={<Blog />} />}
         {<Route path="/agent" element={<Agent />} />}
+        {<Route path="/property/:id" element={<PropertyDetails />} />}
         {<Route path="/blog/:id" element={<BlogComponent />} />}
         {<Route path="/agent-signup" element={<AgentSignup />} />}
         {<Route path="/signup-options" element={<SignUpCard />} />}
@@ -95,6 +98,7 @@ function App() {
         {<Route path="/my-properties" element={<Myproperties />} />}
         {<Route path="/inquiries" element={<ClientMessages />} />}
         {<Route path="/properties" element={<BrowseProperties />} />}
+        {<Route path="/liked" element={<LikedProperties />} />}
         {
           <Route
             path="/browse"

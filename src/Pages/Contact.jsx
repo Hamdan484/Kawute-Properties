@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { supabase } from "../supabase_client";
 
 function Contact() {
   const [formData, setFormData] = useState({
@@ -14,20 +15,47 @@ function Contact() {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault();
+    const { data, error } = await supabase.from("contact_messages").insert([formData]);
 
-    console.log(formData);
-    alert("Message Sent Successfully!");
+    if (error) {
+      console.error("Error submitting contact form:", error);
+      alert("Failed to send message. Please try again.");
+    } else {
+      console.log("Message sent successfully:", data);
+      alert("Message Sent Successfully!");
+    }
+    setFormData({
+      name: "",
+      email: "",
+      subject: "",
+      message: "",
+    }); 
   };
 
   return (
     <div className="min-h-screen bg-white pt-20">
       {/* Hero Section */}
-      <section className="bg-black text-white py-20 px-6">
-        <div className="max-w-6xl mx-auto text-center">
-          <h1 className="text-5xl font-bold mb-4">Contact Us</h1>
-          <p className="text-gray-300 max-w-2xl mx-auto">
+      <section
+        className="relative bg-cover bg-center py-40 px-6 overflow-hidden min-h-[450px] w-full"
+        style={{
+          backgroundImage:
+            "url('https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8ZW58MHx8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80')",
+          backgroundAttachment: "fixed",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+        }}
+      >
+        {/* Dark overlay */}
+        <div className="absolute inset-0 bg-black/60"></div>
+
+        <div className="max-w-6xl mx-auto text-center relative z-10">
+          <h1 className="text-5xl md:text-6xl font-bold text-white mb-4 tracking-tight">
+            Contact Us
+          </h1>
+          <p className="text-xl text-gray-200 max-w-2xl mx-auto">
             We'd love to hear from you. Reach out for inquiries, property
             consultations, or support.
           </p>
