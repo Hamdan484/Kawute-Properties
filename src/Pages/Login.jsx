@@ -18,7 +18,37 @@ function Login() {
     if (error) {
       alert(error.message);
     } else {
-      navigate("/agent-dashboard");
+      const user = data.user;
+      const role = user?.user_metadata?.role;
+
+      if (role === "agent") {
+        navigate("/agent-dashboard");
+      } else if (role === "admin") {
+        navigate("/admin-dashboard");
+      } else if (role === "customer") {
+        navigate("/user-dashboard");
+      } else {
+        // Safe database check fallback for users without metadata role
+        try {
+          const { data: profile } = await supabase
+            .from("profiles")
+            .select("role")
+            .eq("user_id", user.id)
+            .maybeSingle();
+
+          const userRole = profile?.role || "customer";
+          if (userRole === "agent") {
+            navigate("/agent-dashboard");
+          } else if (userRole === "admin") {
+            navigate("/admin-dashboard");
+          } else {
+            navigate("/user-dashboard");
+          }
+        } catch (err) {
+          console.error("Profile check failed:", err);
+          navigate("/user-dashboard");
+        }
+      }
     }
   };
 

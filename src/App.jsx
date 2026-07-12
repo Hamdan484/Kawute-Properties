@@ -18,15 +18,15 @@ import AgentSignup from "./Pages/SignUp_Agent";
 import SignUpCard from "./Pages/Sign_up_card";
 import AgentDashboard from "./Pages/Agent_dashboard";
 import AdminDashboard from "./Pages/Admin_dashboard";
-import UserDashboard from "./Pages/user_dashboard";
+import UserDashboard from "./Pages/User_dashboard";
 import AddProperty from "./Components/Add_properties";
 import Myproperties from "./Components/My_properties";
 import ClientMessages from "./Components/Client_messages";
 import BrowseProperties from "./Components/Browse_properties";
 import Savedlistings from "./Components/Saved_listings";
 import Profile from "./Components/Profile";
-import PropertyCard from "./Components/PropertyCard";
-import My_properties from "./Components/My_properties";
+import ProtectedRoute from "./Components/ProtectedRoute";
+
 function App() {
   useEffect(() => {
     // Global auth listener to create profile after email confirmation
@@ -36,6 +36,7 @@ function App() {
           const userId = session.user.id;
           const userEmail = session.user.email;
           const fullName = session.user.user_metadata?.full_name || "";
+          const role = session.user.user_metadata?.role || "customer";
 
           // Check if profile already exists
           const { data: existingProfile, error: fetchError } = await supabase
@@ -58,6 +59,7 @@ function App() {
                   user_id: userId,
                   full_name: fullName,
                   email: userEmail,
+                  role: role,
                 },
               ]);
 
@@ -91,12 +93,90 @@ function App() {
         {<Route path="/blog/:id" element={<BlogComponent />} />}
         {<Route path="/agent-signup" element={<AgentSignup />} />}
         {<Route path="/signup-options" element={<SignUpCard />} />}
-        {<Route path="/agent-dashboard" element={<AgentDashboard />} />}
-        {<Route path="/admin-dashboard" element={<AdminDashboard />} />}
-        {<Route path="/user-dashboard" element={<UserDashboard />} />}
-        {<Route path="/add-property" element={<AddProperty />} />}
-        {<Route path="/my-properties" element={<Myproperties />} />}
-        {<Route path="/inquiries" element={<ClientMessages />} />}
+        
+        {/* Protected Dashboard Routes */}
+        {
+          <Route
+            path="/agent-dashboard"
+            element={
+              <ProtectedRoute requiredRole="agent">
+                <AgentDashboard />
+              </ProtectedRoute>
+            }
+          />
+        }
+        {
+          <Route
+            path="/admin-dashboard"
+            element={
+              <ProtectedRoute requiredRole="admin">
+                <AdminDashboard />
+              </ProtectedRoute>
+            }
+          />
+        }
+        {
+          <Route
+            path="/user-dashboard"
+            element={
+              <ProtectedRoute requiredRole="customer">
+                <UserDashboard />
+              </ProtectedRoute>
+            }
+          />
+        }
+        {
+          <Route
+            path="/add-property"
+            element={
+              <ProtectedRoute requiredRole="agent">
+                <AddProperty />
+              </ProtectedRoute>
+            }
+          />
+        }
+        {
+          <Route
+            path="/my-properties"
+            element={
+              <ProtectedRoute requiredRole="agent">
+                <Myproperties />
+              </ProtectedRoute>
+            }
+          />
+        }
+        {
+          <Route
+            path="/inquiries"
+            element={
+              <ProtectedRoute requiredRole="agent">
+                <ClientMessages />
+              </ProtectedRoute>
+            }
+          />
+        }
+        {
+          <Route
+            path="/profile"
+            element={
+              <ProtectedRoute>
+                <Profile />
+              </ProtectedRoute>
+            }
+          />
+        }
+        {
+          <Route
+            path="/saved"
+            element={
+              <ProtectedRoute requiredRole="customer">
+                <Savedlistings />
+              </ProtectedRoute>
+            }
+          />
+        }
+
+        {/* Public Browsing Routes */}
         {<Route path="/properties" element={<BrowseProperties />} />}
         {<Route path="/liked" element={<LikedProperties />} />}
         {
@@ -105,9 +185,6 @@ function App() {
             element={<Navigate to="/properties" replace />}
           />
         }
-        {<Route path="/saved" element={<Savedlistings />} />}
-        {<Route path="/profile" element={<Profile />} />}
-        {<Route path="/my-properties" element={<my_properties />} />}
       </Routes>
 
       <Footer />

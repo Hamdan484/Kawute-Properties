@@ -37,6 +37,7 @@ function Signup() {
       options: {
         data: {
           full_name: formData.full_name,
+          role: "customer",
         },
         emailRedirectTo: `${window.location.origin}/signup`,
       },

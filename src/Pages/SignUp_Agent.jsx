@@ -41,6 +41,7 @@ function AgentSignup() {
       options: {
         data: {
           full_name: formData.full_name,
+          role: "agent",
         },
       },
     });
