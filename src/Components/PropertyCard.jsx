@@ -65,7 +65,7 @@ const PropertyCard = ({ property, onLikeChange, hideHeart = false }) => {
   } = property || {};
 
   const formattedPrice = Number(price)
-    ? `₵ ${Number(price).toLocaleString()}`
+    ? `$ ${Number(price).toLocaleString()}`
     : "Price unavailable";
 
   const imageSrc =

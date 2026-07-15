@@ -26,6 +26,7 @@ import BrowseProperties from "./Components/Browse_properties";
 import Savedlistings from "./Components/Saved_listings";
 import Profile from "./Components/Profile";
 import ProtectedRoute from "./Components/ProtectedRoute";
+import ScrollToTop from "./Components/Scroll_to_top";
 
 function App() {
   useEffect(() => {
@@ -80,6 +81,7 @@ function App() {
 
   return (
     <BrowserRouter>
+    <ScrollToTop />
       <Navbar />
       <Routes>
         {<Route path="/" element={<Home />} />}

@@ -137,18 +137,7 @@ function LikedProperties() {
                 Start exploring and like properties to save them here
               </p>
 
-              {/* Debug Section */}
-              <div className="bg-gray-100 p-6 rounded-lg mb-8 inline-block max-w-md">
-                <p className="text-sm text-gray-600 font-mono mb-2">
-                  Debug Info:
-                </p>
-                <p className="text-xs text-left text-gray-700 font-mono">
-                  Stored IDs:{" "}
-                  {JSON.stringify(
-                    JSON.parse(localStorage.getItem("likedProperties") || "[]"),
-                  )}
-                </p>
-              </div>
+              
 
               <a
                 href="/properties"
