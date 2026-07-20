@@ -41,7 +41,7 @@ function Home() {
       const { data, error } = await supabase
         .from("properties")
         .select("*")
-        .limit(7);
+        .limit(9);
 
       if (error) {
         console.log("error fetching:", error);

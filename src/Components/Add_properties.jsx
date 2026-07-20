@@ -12,27 +12,84 @@ function AddProperty() {
     bath_rooms: "",
     appartment_type: "Apartment",
     availability: "Available",
+    
+    amenities: [],
+    address: "",
+    contact: "",
+  });
+const amenitiesList = [
+  "Swimming Pool",
+  "Parking Space",
+  "Air Conditioning",
+  "Security",
+  "Gym",
+  "Garden",
+  "Balcony",
+  "WiFi",
+];
+
+const handleAmenityChange = (e) => {
+  const { value, checked } = e.target;
+
+  setFormData((prev) => ({
+    ...prev,
+    amenities: checked
+      ? [...prev.amenities, value]
+      : prev.amenities.filter((item) => item !== value),
+  }));
+};
+
+  const [image, setImages] = useState({
+    main: null,
+    interior: null,
   });
 
-  const [image, setImage] = useState(null);
-  const [preview, setPreview] = useState(null);
+  const [preview, setPreview] = useState({
+    main: null,
+    interior: null,
+  });
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
   };
 
-  const handleImage = (e) => {
+  const handleImage = (e, type) => {
     const file = e.target.files[0];
+
     if (!file) return;
 
-    setImage(file);
-    setPreview(URL.createObjectURL(file));
+    setImages((prev) => ({
+      ...prev,
+      [type]: file,
+    }));
+
+    setPreview((prev) => ({
+      ...prev,
+      [type]: URL.createObjectURL(file),
+    }));
+  };
+
+  const createFileName = (file) => {
+    const originalName = file.name.replace(/\.[^/.]+$/, "");
+
+    const extension = file.name.split(".").pop();
+
+    const safeName = originalName
+      .replace(/\s+/g, "_")
+      .replace(/[^a-zA-Z0-9_-]/g, "_")
+      .slice(0, 40);
+
+    return `${Date.now()}_${Math.random()
+      .toString(36)
+      .substring(2, 8)}_${safeName}.${extension}`;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // basic validation
     if (
       !formData.title ||
       !formData.price ||
@@ -43,88 +100,132 @@ function AddProperty() {
       return;
     }
 
-    if (!image) {
-      alert("Please select an image");
+    if (!image.main) {
+      alert("Please upload main property image");
       return;
     }
+
+    // GET USER SESSION
 
     const { data: sessionData, error: sessionError } =
       await supabase.auth.getSession();
-    const userId = sessionData?.session?.user?.id;
 
     if (sessionError) {
-      console.error("Failed to get session:", sessionError);
-      alert("Unable to verify user session. Please log in again.");
+      console.log(sessionError);
+      alert("Session error");
       return;
     }
+
+    const userId = sessionData?.session?.user?.id;
 
     if (!userId) {
-      alert("You must be logged in to add a property.");
+      alert("Please login first");
       return;
     }
 
-    // unique file name (remove spaces and unsafe characters)
-    const originalName = image.name.replace(/\.[^/.]+$/, "");
-    const fileExt = image.name.split(".").pop() || "jpg";
-    const safeBase = originalName
-      .replace(/\s+/g, "_")
-      .replace(/[^a-zA-Z0-9_-]/g, "_")
-      .slice(0, 50);
-    const fileName = `${Date.now()}_${Math.random().toString(36).slice(2, 10)}_${safeBase}.${fileExt}`;
-    const uploadPath = `${userId}/${fileName}`;
-   //After userId verify user is authenticated
-    if(!sessionData?.session){
-      alert("session expired. please login again");
-      return
-    }
+    // =========================
+    // UPLOAD MAIN IMAGE
+    // =========================
 
-    // upload image to storage
-    const { error: uploadError } = await supabase.storage
+    const mainFileName = createFileName(image.main);
+
+    const mainPath = `${userId}/${mainFileName}`;
+
+    const { error: mainUploadError } = await supabase.storage
       .from("property-images")
-      .upload(uploadPath, image, { cacheControl: "3600", upsert: false });
+      .upload(mainPath, image.main, {
+        cacheControl: "3600",
+        upsert: false,
+      });
 
-    if (uploadError) {
-      console.error("Storage upload failed:", uploadError);
-      alert("Failed to upload image. Please try again.");
+    if (mainUploadError) {
+      console.log(mainUploadError);
+      alert("Main image upload failed");
       return;
     }
 
-    // get public URL
-    const { data: urlData, error: urlError } = supabase.storage
+    const { data: mainUrlData } = supabase.storage
       .from("property-images")
-      .getPublicUrl(uploadPath);
+      .getPublicUrl(mainPath);
 
-    if (urlError) {
-      console.error("Failed to get public URL:", urlError);
-      alert("Failed to get image URL.");
-      return;
+    const mainImageUrl = mainUrlData.publicUrl;
+
+    // =========================
+    // UPLOAD INTERIOR IMAGE
+    // =========================
+
+    let interiorImageUrl = null;
+
+    if (image.interior) {
+      const interiorFileName = createFileName(image.interior);
+
+      const interiorPath = `${userId}/${interiorFileName}`;
+
+      const { error: interiorUploadError } = await supabase.storage
+        .from("interior_images_bucket")
+        .upload(interiorPath, image.interior, {
+          cacheControl: "3600",
+          upsert: false,
+        });
+
+      if (interiorUploadError) {
+        console.log(interiorUploadError);
+        alert("Interior image upload failed");
+        return;
+      }
+
+      const { data: interiorUrlData } = supabase.storage
+        .from("interior_images_bucket")
+        .getPublicUrl(interiorPath);
+
+      interiorImageUrl = interiorUrlData.publicUrl;
     }
 
-    const imageUrl = urlData.publicUrl;
+    // =========================
+    // INSERT PROPERTY
+    // =========================
 
-    // insert into database
     const { error } = await supabase.from("properties").insert([
       {
         user_id: userId,
+
         title: formData.title,
+
         description: formData.description,
+
         price: formData.price,
+
         city: formData.city,
+
         area: formData.area,
+
         bed_rooms: formData.bed_rooms,
+
         bath_rooms: formData.bath_rooms,
+
         appartment_type: formData.appartment_type,
+
         availability: formData.availability,
-        image_url: imageUrl,
+
+        image_url: mainImageUrl,
+
+        interior_image_url: interiorImageUrl,
+        
+        amenities: formData.amenities,
+        address: formData.address,
+        contact: formData.contact,
+        
       },
     ]);
 
     if (error) {
-  console.error("Insert error details:", error);
-  alert(`Failed to save property: ${error.message}`);
-  return;
-}
-    // reset form
+      console.log(error);
+
+      alert(error.message);
+
+      return;
+    }
+
     setFormData({
       title: "",
       description: "",
@@ -135,14 +236,24 @@ function AddProperty() {
       bath_rooms: "",
       appartment_type: "Apartment",
       availability: "Available",
+      
+      amenities: [],
+      address: "",
+      contact: "",
     });
 
-    setImage(null);
-    setPreview(null);
+    setImages({
+      main: null,
+      interior: null,
+    });
 
-    alert("Property submitted successfully");
+    setPreview({
+      main: null,
+      interior: null,
+    });
+
+    alert("Property added successfully");
   };
-
   return (
     <div className="min-h-screen bg-black text-white flex items-center justify-center px-4 py-10">
       <form
@@ -153,14 +264,13 @@ function AddProperty() {
           Add New Property
         </h1>
 
-        {/* GRID INPUTS */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           <input
             name="title"
             value={formData.title}
             placeholder="Property Title"
             onChange={handleChange}
-            className="bg-black border border-white/20 p-3 rounded outline-none focus:border-white"
+            className="bg-black border border-white/20 p-3 rounded"
           />
 
           <input
@@ -169,7 +279,7 @@ function AddProperty() {
             placeholder="Price"
             type="number"
             onChange={handleChange}
-            className="bg-black border border-white/20 p-3 rounded outline-none focus:border-white"
+            className="bg-black border border-white/20 p-3 rounded"
           />
 
           <input
@@ -177,7 +287,7 @@ function AddProperty() {
             value={formData.city}
             placeholder="City"
             onChange={handleChange}
-            className="bg-black border border-white/20 p-3 rounded outline-none focus:border-white"
+            className="bg-black border border-white/20 p-3 rounded"
           />
 
           <input
@@ -185,7 +295,7 @@ function AddProperty() {
             value={formData.area}
             placeholder="Area / Location"
             onChange={handleChange}
-            className="bg-black border border-white/20 p-3 rounded outline-none focus:border-white"
+            className="bg-black border border-white/20 p-3 rounded"
           />
 
           <input
@@ -194,24 +304,23 @@ function AddProperty() {
             placeholder="Bedrooms"
             type="number"
             onChange={handleChange}
-            className="bg-black border border-white/20 p-3 rounded outline-none focus:border-white"
+            className="bg-black border border-white/20 p-3 rounded"
           />
 
           <input
             name="bath_rooms"
             value={formData.bath_rooms}
-            placeholder="Bath rooms"
+            placeholder="Bathrooms"
             type="number"
             onChange={handleChange}
-            className="bg-black border border-white/20 p-3 rounded outline-none focus:border-white"
+            className="bg-black border border-white/20 p-3 rounded"
           />
 
-          {/* TYPE */}
           <select
             name="appartment_type"
             value={formData.appartment_type}
             onChange={handleChange}
-            className="w-full mt-5 bg-black border border-white/20 p-3 rounded"
+            className="bg-black border border-white/20 p-3 rounded"
           >
             <option>Apartment</option>
             <option>House</option>
@@ -219,53 +328,118 @@ function AddProperty() {
             <option>Studio</option>
           </select>
 
-          {/* AVAILABILITY */}
           <select
             name="availability"
             value={formData.availability}
             onChange={handleChange}
-            className="w-full mt-5 bg-black border border-white/20 p-3 rounded"
+            className="bg-black border border-white/20 p-3 rounded"
           >
             <option>Available</option>
             <option>Not available</option>
           </select>
         </div>
 
-        {/* DESCRIPTION */}
         <textarea
           name="description"
           value={formData.description}
           placeholder="Property Description..."
           onChange={handleChange}
-          className="w-full mt-5 bg-black border border-white/20 p-3 rounded h-28 outline-none focus:border-white"
+          className="w-full mt-5 bg-black border border-white/20 p-3 rounded h-32"
         />
 
-        {/* IMAGE UPLOAD */}
-        <div className="mt-5">
-          <label className="block mb-2 text-sm text-gray-300">
-            Upload Property Image
+        <input  
+        name="address"
+            value={formData.address}
+            placeholder="Address"
+            type="text"
+            onChange={handleChange}
+            className="bg-black border border-white/20 p-3 rounded"
+        />
+        <input type="text" 
+        name="contact"
+            value={formData.contact}
+            placeholder="Contact"
+            type="text"
+            onChange={handleChange}
+            className="bg-black border border-white/20 p-3 rounded"
+        />
+<div className="mt-6">
+
+  <label className="block mb-3 text-gray-300">
+    Available Amenities
+  </label>
+
+  <div className="grid grid-cols-2 gap-3">
+
+    {amenitiesList.map((amenity) => (
+      <label key={amenity} className="flex items-center gap-2">
+
+        <input
+          type="checkbox"
+          value={amenity}
+          checked={formData.amenities.includes(amenity)}
+          onChange={handleAmenityChange}
+        />
+
+        <span>{amenity}</span>
+
+      </label>
+    ))}
+
+  </div>
+
+</div>
+        
+
+        {/* MAIN IMAGE */}
+
+        <div className="mt-6">
+          <label className="block mb-2 text-gray-300">
+            Upload Main Property Image
           </label>
 
           <input
             type="file"
             accept="image/*"
-            onChange={handleImage}
-            className="w-full text-sm"
+            onChange={(e) => handleImage(e, "main")}
+            className="w-full"
           />
 
-          {preview && (
+          {preview.main && (
             <img
-              src={preview}
-              alt="preview"
-              className="mt-4 w-full h-60 object-cover rounded border border-white/20"
+              src={preview.main}
+              alt="Main preview"
+              className="mt-4 w-full h-60 object-cover rounded"
             />
           )}
         </div>
 
-        {/* SUBMIT */}
+        {/* INTERIOR IMAGE */}
+
+        <div className="mt-6">
+          <label className="block mb-2 text-gray-300">
+            Upload Interior Image
+          </label>
+
+          <input
+            type="file"
+            accept="image/*"
+            onChange={(e) => handleImage(e, "interior")}
+            className="w-full"
+          />
+
+          {preview.interior && (
+            <img
+              src={preview.interior}
+              alt="Interior preview"
+              className="mt-4 w-full h-60 object-cover rounded"
+            />
+          )}
+        </div>
+
         <button
           type="submit"
-          className="w-full mt-6 bg-white text-black font-semibold py-3 rounded hover:bg-black hover:text-white border border-white transition"
+          className="w-full mt-8 bg-white text-black font-semibold py-3 rounded hover:bg-gray-200 transition"
         >
           Submit Property
         </button>
