@@ -28,6 +28,7 @@ import Profile from "./Components/Profile";
 import ProtectedRoute from "./Components/ProtectedRoute";
 import ScrollToTop from "./Components/Scroll_to_top";
 
+
 function App() {
   useEffect(() => {
     // Global auth listener to create profile after email confirmation

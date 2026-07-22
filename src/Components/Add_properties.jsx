@@ -26,6 +26,10 @@ const amenitiesList = [
   "Garden",
   "Balcony",
   "WiFi",
+  "Reception Area"
+
+
+
 ];
 
 const handleAmenityChange = (e) => {
