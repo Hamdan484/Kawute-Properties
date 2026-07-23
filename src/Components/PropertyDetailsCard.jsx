@@ -7,9 +7,45 @@ import {
   ArrowLeft,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { supabase } from "../supabase_client";
 
 function PropertyDetailsCard({ property }) {
   const navigate = useNavigate();
+const deposit = (property.price*12) * 0.30;
+  const handlePayment = async () => {
+    
+  try {
+    const { data, error } = await supabase.functions.invoke(
+      "initialize-payment",
+      {
+        body: {
+          propertyId: property.property_id,
+          amount: deposit,
+          paymentType: "reservation_deposit",
+        },
+      }
+    );
+
+    if (error) {
+      console.error("Functions error:", error);
+
+      // Read the actual response returned by the Edge Function
+      if (error.context) {
+        const responseText = await error.context.text();
+        alert("Payment initialization failed. Please try again later.");
+        console.error("Actual Edge Function response:", responseText);
+      }
+
+      return;
+    }
+
+    console.log("Payment initialized successfully:", data);
+
+    window.location.href = data.authorization_url;
+  } catch (error) {
+    console.error("Payment error:", error);
+  }
+};
 
   return (
     <main className="min-h-screen bg-white text-black">
@@ -258,7 +294,9 @@ function PropertyDetailsCard({ property }) {
                   Contact on WhatsApp
                 </a>
               )}
-
+<button onClick={handlePayment} className="mt-3 flex w-full items-center justify-center rounded-xl border border-black py-3 font-medium transition hover:bg-black hover:text-white">
+  Pay GHS {deposit.toLocaleString()} Reservation Deposit
+</button>
             </div>
 
           </div>

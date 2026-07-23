@@ -20,7 +20,7 @@ function PropertyDetails() {
         return;
       }
 
-      console.log("Fetching property with UUID:", id);
+      console.log("Fetching property with UUID:");
 
       const { data, error } = await supabase
         .from("properties")
@@ -38,7 +38,7 @@ function PropertyDetails() {
         return;
       }
 
-      console.log("Property fetched successfully:", data);
+      console.log("Property fetched successfully:");
 
       setProperty(data);
       setLoading(false);
